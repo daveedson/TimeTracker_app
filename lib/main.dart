@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:time_tracker_app_original/landing_page.dart';
+import 'package:time_tracker_app_original/services/auth.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.red[400],
       ),
-      home: LandingPage(),
+      home: LandingPage(
+        authController: Auth(),
+      ),
     );
   }
 }

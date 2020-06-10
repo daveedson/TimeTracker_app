@@ -1,36 +1,42 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:time_tracker_app_original/Home_page.dart';
+import 'package:time_tracker_app_original/services/AuthController.dart';
+import 'package:time_tracker_app_original/services/auth.dart';
 import 'package:time_tracker_app_original/sign_in_page.dart';
 
-class LandingPage extends StatefulWidget {
-  @override
-  _LandingPageState createState() => _LandingPageState();
-}
+/*
+this page holds the control flow for all the sign in and signOut....
+ */
 
-class _LandingPageState extends State<LandingPage> {
-  //instance creation of firebase user to authenticate, if user is signed in or not.
-  FirebaseUser _user;
+class LandingPage extends StatelessWidget {
+  LandingPage({@required this.authController});
 
-  //this method updates user state with an input of Firebase user, which takes them to the homeScreen page...
-  void _updateUser(FirebaseUser user) {
-    //print('user id : ${user.uid}');
-
-    setState(() {
-      _user =
-          user; //this block simply changes the state of the user to the homepage
-    });
-  }
+  final AuthController authController;
 
   @override
   Widget build(BuildContext context) {
-    //this condition checks the state of the user,if the user to check if user is signed in or not,so it can decide which page to show.
-    if (_user == null) {
-      return SignInPage(
-        onSignIn: _updateUser,
-      );
-    } else {
-      return HomePage(); //temporal
-    }
+    return StreamBuilder<User>(
+        stream: authController.onAuthStatChanged,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            User user = snapshot.data;
+            //this condition checks the state of the user,if the user to check if user is signed in or not,so it can decide which page to show.
+            if (user == null) {
+              return SignInPage(
+                authController: authController,
+              );
+            } else {
+              return HomePage(
+                authController: authController,
+              );
+            }
+          } else {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        });
   }
 }

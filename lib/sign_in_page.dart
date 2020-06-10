@@ -1,17 +1,25 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/widgets/custom_raisedButton.dart';
 
 class SignInPage extends StatelessWidget {
-  SignInPage({@required this.onSignIn}); //Constructor for SignInPage Class..
+  SignInPage({this.authController}); //Constructor for SignInPage Class..
 
-  final Function(FirebaseUser) onSignIn; //custom call back for signIn
+  final AuthController authController;
 
   //this method signs in the user anonymously  returning a future return type
   Future<void> _signInAnonymously() async {
     try {
-      final authResult = await FirebaseAuth.instance.signInAnonymously();
-      onSignIn(authResult.user);
+      await authController.signInAnonymously();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  //this method signs user in with Google..
+  Future<void> _signInWithGoogle() async {
+    try {
+      await authController.signInWithGoogle();
     } catch (e) {
       print(e.toString());
     }
@@ -49,7 +57,7 @@ class SignInPage extends StatelessWidget {
                 style: TextStyle(color: Colors.black87, fontSize: 15.0),
               ),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: _signInWithGoogle,
             ),
             SizedBox(
               height: 5.0,
