@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
+import 'package:time_tracker_app_original/signIn_with_email.dart';
 import 'package:time_tracker_app_original/widgets/custom_raisedButton.dart';
 
 class SignInPage extends StatelessWidget {
@@ -23,6 +24,22 @@ class SignInPage extends StatelessWidget {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  //this method logs in with facebook
+  Future<void> _logInWithFacebook() async {
+    try {
+      await authController.loginInWithFacebook();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void _signInWithEmail(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            fullscreenDialog: true, builder: (context) => EmailSignInPage()));
   }
 
   @override
@@ -67,7 +84,7 @@ class SignInPage extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 15.0)),
               color: Color(0xFF3344D92),
               borderRadius: 5.0,
-              onPressed: () {},
+              onPressed: _logInWithFacebook,
             ),
             SizedBox(
               height: 5.0,
@@ -79,7 +96,7 @@ class SignInPage extends StatelessWidget {
               ),
               borderRadius: 5.0,
               color: Colors.yellowAccent[100],
-              onPressed: () {},
+              onPressed: () => _signInWithEmail(context),
             ),
             SizedBox(
               height: 10.0,

@@ -20,7 +20,7 @@ class LandingPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             User user = snapshot.data;
-            //this condition checks the state of the user,if the user to check if user is signed in or not,so it can decide which page to show.
+            //this condition checks the state of the user,if the  user is signed in or not,so it can decide which page to show.
             if (user == null) {
               return SignInPage(
                 authController: authController,

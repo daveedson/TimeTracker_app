@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 
@@ -57,7 +58,7 @@ class Auth implements AuthController {
 
     //this condition would be true if the user has completed the signIn condition successfully
     if (googleSignInAccount != null) {
-      //code to get the access token
+      //code to authenticate the google user..
       GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
       //call to firebase to get an auth result.
@@ -84,11 +85,35 @@ class Auth implements AuthController {
     }
   }
 
+  //method to login with facebook.
+  @override
+  Future<User> loginInWithFacebook() async {
+    FacebookLogin facebookLogin = FacebookLogin();
+    final result = await facebookLogin.logIn(
+      ['public_profile'],
+    );
+    if (result.accessToken != null) {
+      final authResult = await _firebaseAuth.signInWithCredential(
+        FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
+        ),
+      );
+      return _userFromFirebase(authResult.user);
+    } else {
+      throw PlatformException(
+        code: 'Error_Aborted_by_User',
+        message: 'Sign in aborted by user',
+      );
+    }
+  }
+
   //this method LogsOut the current user
   @override
   Future<void> signOut() async {
     final googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
+    final faceBook = FacebookLogin();
+    await faceBook.logOut();
     return await _firebaseAuth.signOut();
   }
 }

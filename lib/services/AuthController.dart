@@ -7,4 +7,5 @@ abstract class AuthController {
   Future<void> signOut();
   Stream<User> get onAuthStatChanged;
   Future<User> signInWithGoogle();
+  Future<User> loginInWithFacebook();
 }
