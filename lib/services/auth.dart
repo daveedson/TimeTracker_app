@@ -107,6 +107,21 @@ class Auth implements AuthController {
     }
   }
 
+  //this method signs in user with email and password.
+  @override
+  Future<User> signInWthEmailAndPassword(String email, password) async {
+    final authResult = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+    return _userFromFirebase(authResult.user);
+  }
+
+  @override
+  Future<User> RegisterUserInWthEmailAndPassword(String email, password) async {
+    final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    return _userFromFirebase(authResult.user);
+  }
+
   //this method LogsOut the current user
   @override
   Future<void> signOut() async {

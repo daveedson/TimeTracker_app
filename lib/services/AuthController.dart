@@ -8,4 +8,6 @@ abstract class AuthController {
   Stream<User> get onAuthStatChanged;
   Future<User> signInWithGoogle();
   Future<User> loginInWithFacebook();
+  Future<User> signInWthEmailAndPassword(String email, password);
+  Future<User> RegisterUserInWthEmailAndPassword(String email, password);
 }
