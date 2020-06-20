@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({@required this.authController});
-
-  final AuthController authController;
-
   //Method to SignOut User
-  Future<void> _signOut() async {
+  Future<void> _signOut(BuildContext context) async {
+    final authController = Provider.of<AuthController>(context, listen: false);
+
     try {
       await authController.signOut();
     } catch (e) {
@@ -25,7 +24,7 @@ class HomePage extends StatelessWidget {
         defaultActionText: 'LogOut',
       ).show(context);
       if (grantSignOut == true) {
-        _signOut();
+        _signOut(context);
       }
     } catch (e) {
       print(e.toString());

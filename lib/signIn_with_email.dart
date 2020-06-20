@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/widgets/FormButton.dart';
-import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
+
+import 'PlatFormExceptionAlertDialog.dart';
 
 enum FormType { signIn, register }
 
 class EmailSignInPage extends StatefulWidget {
-  EmailSignInPage({@required this.authController});
-  final AuthController authController;
   @override
   _EmailSignInPageState createState() => _EmailSignInPageState();
 }
@@ -34,20 +35,19 @@ class _EmailSignInPageState extends State<EmailSignInPage> {
       _isLoading = true;
     });
     try {
+      final authController =
+          Provider.of<AuthController>(context, listen: false);
+
       if (_formType == FormType.signIn) {
-        await widget.authController
-            .signInWthEmailAndPassword(_email, _password);
+        await authController.signInWthEmailAndPassword(_email, _password);
       } else if (_formType == FormType.register) {
-        await widget.authController
-            .RegisterUserInWthEmailAndPassword(_email, _password);
+        await authController.RegisterUserInWthEmailAndPassword(
+            _email, _password);
       }
       Navigator.pop(context);
-    } catch (e) {
+    } on PlatformException catch (e) {
       print(e.toString());
-      PlatFormAlertDialog(
-              title: 'Sign In Failed',
-              content: e.toString(),
-              defaultActionText: 'Ok')
+      PlatExceptionFormAlertDialog(title: 'Sign In Failed', exception: e)
           .show(context);
     } finally {
       setState(() {

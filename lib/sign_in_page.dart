@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/signIn_with_email.dart';
 import 'package:time_tracker_app_original/widgets/custom_raisedButton.dart';
 
 class SignInPage extends StatelessWidget {
-  SignInPage({this.authController}); //Constructor for SignInPage Class..
-
-  final AuthController authController;
-
   //this method signs in the user anonymously  returning a future return type
-  Future<void> _signInAnonymously() async {
+  Future<void> _signInAnonymously(BuildContext context) async {
+    final authController = Provider.of<AuthController>(context, listen: false);
     try {
       await authController.signInAnonymously();
     } catch (e) {
@@ -18,7 +16,9 @@ class SignInPage extends StatelessWidget {
   }
 
   //this method signs user in with Google..
-  Future<void> _signInWithGoogle() async {
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    final authController = Provider.of<AuthController>(context, listen: false);
+
     try {
       await authController.signInWithGoogle();
     } catch (e) {
@@ -27,7 +27,8 @@ class SignInPage extends StatelessWidget {
   }
 
   //this method logs in with facebook
-  Future<void> _logInWithFacebook() async {
+  Future<void> _logInWithFacebook(BuildContext context) async {
+    final authController = Provider.of<AuthController>(context, listen: false);
     try {
       await authController.loginInWithFacebook();
     } catch (e) {
@@ -37,12 +38,12 @@ class SignInPage extends StatelessWidget {
 
   void _signInWithEmail(BuildContext context) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (context) => EmailSignInPage(
-                  authController: authController,
-                )));
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => EmailSignInPage(),
+      ),
+    );
   }
 
   @override
@@ -77,7 +78,7 @@ class SignInPage extends StatelessWidget {
                 style: TextStyle(color: Colors.black87, fontSize: 15.0),
               ),
               color: Colors.white,
-              onPressed: _signInWithGoogle,
+              onPressed: () => _signInWithGoogle(context),
             ),
             SizedBox(
               height: 5.0,
@@ -87,7 +88,7 @@ class SignInPage extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 15.0)),
               color: Color(0xFF3344D92),
               borderRadius: 5.0,
-              onPressed: _logInWithFacebook,
+              onPressed: () => _logInWithFacebook(context),
             ),
             SizedBox(
               height: 5.0,
@@ -119,7 +120,7 @@ class SignInPage extends StatelessWidget {
               ),
               borderRadius: 5.0,
               color: Colors.teal,
-              onPressed: _signInAnonymously,
+              onPressed: () => _signInAnonymously(context),
             ),
           ],
         ),
