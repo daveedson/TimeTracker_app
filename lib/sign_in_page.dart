@@ -4,46 +4,84 @@ import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/signIn_with_email.dart';
 import 'package:time_tracker_app_original/widgets/custom_raisedButton.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   //this method signs in the user anonymously  returning a future return type
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  //loading state if the button is clicked
+  bool _isloading = false;
+
   Future<void> _signInAnonymously(BuildContext context) async {
+    setState(() {
+      _isloading = true;
+    });
     final authController = Provider.of<AuthController>(context, listen: false);
     try {
       await authController.signInAnonymously();
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
     }
   }
 
-  //this method signs user in with Google..
   Future<void> _signInWithGoogle(BuildContext context) async {
+    setState(() {
+      _isloading = true;
+    });
     final authController = Provider.of<AuthController>(context, listen: false);
 
     try {
       await authController.signInWithGoogle();
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
     }
   }
 
-  //this method logs in with facebook
   Future<void> _logInWithFacebook(BuildContext context) async {
+    setState(() {
+      _isloading = true;
+    });
     final authController = Provider.of<AuthController>(context, listen: false);
     try {
       await authController.loginInWithFacebook();
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
     }
   }
 
   void _signInWithEmail(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) => EmailSignInPage(),
-      ),
-    );
+    setState(() {
+      _isloading = true;
+    });
+    try {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => EmailSignInPage(),
+        ),
+      );
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
+    }
   }
 
   @override
@@ -62,14 +100,7 @@ class SignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "Sign in",
-              style: TextStyle(
-                  letterSpacing: 1.2,
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
+            _buildCircularIndicator(context),
             SizedBox(height: 30.0),
             CustomRaisedButton(
               borderRadius: 5.0,
@@ -126,5 +157,18 @@ class SignInPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildCircularIndicator(BuildContext context) {
+    if (_isloading) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return Text(
+        "Sign in",
+        style: TextStyle(
+            letterSpacing: 1.2, fontSize: 25.0, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      );
+    }
   }
 }

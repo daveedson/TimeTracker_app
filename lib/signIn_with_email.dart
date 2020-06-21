@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/widgets/FormButton.dart';
@@ -83,81 +84,85 @@ class _EmailSignInPageState extends State<EmailSignInPage> {
         title: Text("Sign In"),
         elevation: 10.0,
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Card(
-                child: Container(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextFormField(
-                      enabled: _isLoading == false,
-                      validator: (email) {
-                        if (email.isEmpty) {
-                          return 'email cannot be empty';
-                        }
-                        if (email.length < 5) {
-                          return 'email not valid';
-                        }
-                        if (email.contains('@')) {
-                          return 'email is badly formatted';
-                        } else {
-                          return null;
-                        }
-                      },
-                      onEditingComplete: _emailEditingComplete,
-                      focusNode: _emailFocusNode,
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                          labelText: 'Email', hintText: 'boy@email.com'),
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                    ),
-                    SizedBox(height: 8.0),
-                    TextFormField(
-                      enabled: _isLoading == false,
-                      validator: (password) {
-                        if (password.isEmpty) {
-                          return "password can't be empty";
-                        }
-                        if (password.length < 6) {
-                          return "Password can't be less than 6";
-                        } else {
-                          return null;
-                        }
-                      },
-                      onEditingComplete: _submit,
-                      focusNode: _passwordFocusNode,
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                      ),
-                      obscureText: true,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.done,
-                    ),
-                    SizedBox(height: 8.0),
-                    FormSubmitButton(
-                        text: primaryText,
-                        onPressed: () {
-                          if (_formKey.currentState.validate() && !_isLoading) {
-                            _submit();
+      body: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Card(
+                  child: Container(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextFormField(
+                        enabled: _isLoading == false,
+                        validator: (email) {
+                          if (email.isEmpty) {
+                            return 'email cannot be empty';
                           }
-                        }),
-                    FlatButton(
-                      child: Text(secondaryText),
-                      onPressed: !_isLoading ? _toogleFormState : null,
-                    )
-                  ],
+                          if (email.length < 5) {
+                            return 'email not valid';
+                          }
+                          if (email.contains('@')) {
+                            return 'email is badly formatted';
+                          } else {
+                            return null;
+                          }
+                        },
+                        onEditingComplete: _emailEditingComplete,
+                        focusNode: _emailFocusNode,
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                            labelText: 'Email', hintText: 'boy@email.com'),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        enabled: _isLoading == false,
+                        validator: (password) {
+                          if (password.isEmpty) {
+                            return "password can't be empty";
+                          }
+                          if (password.length < 6) {
+                            return "Password can't be less than 6";
+                          } else {
+                            return null;
+                          }
+                        },
+                        onEditingComplete: _submit,
+                        focusNode: _passwordFocusNode,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                        ),
+                        obscureText: true,
+                        autocorrect: false,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      SizedBox(height: 8.0),
+                      FormSubmitButton(
+                          text: primaryText,
+                          onPressed: () {
+                            if (_formKey.currentState.validate() &&
+                                !_isLoading) {
+                              _submit();
+                            }
+                          }),
+                      FlatButton(
+                        child: Text(secondaryText),
+                        onPressed: !_isLoading ? _toogleFormState : null,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            )),
+              )),
+            ),
           ),
         ),
       ),
