@@ -22,7 +22,7 @@ class LandingPage extends StatelessWidget {
             User user = snapshot.data;
             //this condition checks the state of the user,if the   user is signed in or not,so it can decide which page to show.
             if (user == null) {
-              return SignInPage();
+              return SignInPage.create(context);
             } else {
               return HomePage();
             }
