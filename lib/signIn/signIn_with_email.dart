@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/widgets/FormButton.dart';
 
-import 'PlatFormExceptionAlertDialog.dart';
+import '../PlatFormExceptionAlertDialog.dart';
 
 enum FormType { signIn, register }
 
@@ -69,6 +69,15 @@ class _EmailSignInPageState extends State<EmailSignInPage> {
 
   void _emailEditingComplete() {
     FocusScope.of(context).requestFocus(_passwordFocusNode);
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
   }
 
   final _formKey = GlobalKey<FormState>();

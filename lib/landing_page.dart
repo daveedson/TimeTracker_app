@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/Home_page.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/services/auth.dart';
-import 'package:time_tracker_app_original/sign_in_page.dart';
+
+import 'file:///C:/Users/ADMIN/AndroidStudioProjects/time_tracker_app_original/lib/signIn/sign_in_page.dart';
 
 /*
 this page holds the control flow for all the sign in and signOut....

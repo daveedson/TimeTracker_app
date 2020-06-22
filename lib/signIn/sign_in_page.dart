@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
-import 'package:time_tracker_app_original/signIn_with_email.dart';
 import 'package:time_tracker_app_original/widgets/custom_raisedButton.dart';
+
+import 'file:///C:/Users/ADMIN/AndroidStudioProjects/time_tracker_app_original/lib/signIn/signIn_with_email.dart';
 
 class SignInPage extends StatefulWidget {
   //this method signs in the user anonymously  returning a future return type
