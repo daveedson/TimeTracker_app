@@ -1,88 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
+import 'package:time_tracker_app_original/signIn/email_signIn_page.dart';
 import 'package:time_tracker_app_original/signIn/sign_in_Bloc.dart';
 import 'package:time_tracker_app_original/widgets/custom_raisedButton.dart';
 
-import 'file:///C:/Users/ADMIN/AndroidStudioProjects/time_tracker_app_original/lib/signIn/signIn_with_email.dart';
-
 class SignInPage extends StatelessWidget {
-  SignInPage({this.bloc});
+  SignInPage({@required this.bloc});
+
   final SignInBloc bloc;
+
+  // final AuthController authController;
   /*
   this method is created to use the provider<SignInBloc> package as the parent of signInPage
     to allow seperating Ui code and business logic
     which also gives us a way of accessing the signInBloc class using the Provider Package.
    */
-//  static Widget create(BuildContext context) {
-//    return Provider<SignInBloc>(
-//      create: (context) => SignInBloc(),
-//      child: SignInPage(),
-//    );
-//  }
+  static Widget create(BuildContext context) {
+    final authController = Provider.of<AuthController>(context, listen: false);
+    return Provider<SignInBloc>(
+      create: (_) => SignInBloc(authController: authController),
+      dispose: (context, bloc) => bloc.dispose(),
+      child: Consumer<SignInBloc>(
+        builder: (context, bloc, _) => SignInPage(bloc: bloc),
+      ),
+    );
+  }
 
   //loading state if the button is clicked
 //  bool _isloading = false;
 
   Future<void> _signInAnonymously(BuildContext context) async {
-    final authController = Provider.of<AuthController>(context, listen: false);
     try {
-      bloc.setIsLoading(true);
-      await authController.signInAnonymously();
+      await bloc.signInAnonymously();
     } catch (e) {
       print(e.toString());
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
-    bloc.setIsLoading(true);
-    final authController = Provider.of<AuthController>(context, listen: false);
-
     try {
-      await authController.signInWithGoogle();
+      await bloc.signInWithGoogle();
     } catch (e) {
       print(e.toString());
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   Future<void> _logInWithFacebook(BuildContext context) async {
-    final authController = Provider.of<AuthController>(context, listen: false);
     try {
-      bloc.setIsLoading(true);
-      await authController.loginInWithFacebook();
+      await bloc.loginInWithFacebook();
     } catch (e) {
       print(e.toString());
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
+  //this method navigates to the email sign in page.
   void _signInWithEmail(BuildContext context) {
-    final bloc = Provider.of<SignInBloc>(context);
-
+    // final bloc = Provider.of<SignInBloc>(context, listen: false);
     try {
-      bloc.setIsLoading(true);
       Navigator.push(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           fullscreenDialog: true,
           builder: (context) => EmailSignInPage(),
         ),
       );
     } catch (e) {
       print(e.toString());
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<SignInBloc>(context);
+    final bloc = Provider.of<SignInBloc>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(

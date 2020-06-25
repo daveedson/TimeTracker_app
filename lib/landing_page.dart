@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/Home_page.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/services/auth.dart';
-import 'package:time_tracker_app_original/signIn/sign_in_Bloc.dart';
 
 import 'file:///C:/Users/ADMIN/AndroidStudioProjects/time_tracker_app_original/lib/signIn/sign_in_page.dart';
 
@@ -23,10 +22,7 @@ class LandingPage extends StatelessWidget {
             User user = snapshot.data;
             //this condition checks the state of the user,if the   user is signed in or not,so it can decide which page to show.
             if (user == null) {
-              return Provider<SignInBloc>(
-                create: (context) => SignInBloc(),
-                child: SignInPage(),
-              );
+              return SignInPage.create(context);
             } else {
               return HomePage();
             }
