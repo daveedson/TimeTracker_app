@@ -17,11 +17,15 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  //these two instances would control the focus of the cusor in our textfield..
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
   //Default type of The form,this line makes this the default state of the form.
   EmailSignInFormType _formType = EmailSignInFormType.signIn;
 
+  //These block assigns the the emailController and passwordController to a String Variable of Email & password
   String get _email => _emailController.text.toString();
-
   String get _password => _passwordController.text.toString();
 
   bool _isLoading = false;
@@ -63,6 +67,11 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     _passwordController.clear();
   }
 
+  //this method allows to move from the email textField.
+  void _emailEditingDone() {
+    FocusScope.of(context).requestFocus(_passwordFocusNode);
+  }
+
   //widget Children
   List<Widget> _buildChildren(BuildContext context) {
     //this line changes the text of the button
@@ -102,6 +111,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   TextField _buildPasswordTextField() {
     return TextField(
+      onEditingComplete: _submit,
+      focusNode: _passwordFocusNode,
       textInputAction: TextInputAction.done,
       autocorrect: false,
       controller: _passwordController,
@@ -114,6 +125,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   TextField _buildEmailTextField() {
     return TextField(
+      onEditingComplete: _emailEditingDone,
+      focusNode: _emailFocusNode,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
       controller: _emailController,
