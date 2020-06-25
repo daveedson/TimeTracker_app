@@ -80,6 +80,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     final flatButtonText = _formType == EmailSignInFormType.signIn
         ? "Don't have an Account? Register"
         : "Already have an account Sign In";
+
+    bool enableSubmitButton = _email.isNotEmpty && _password.isNotEmpty;
+
     return [
       _buildEmailTextField(),
       SizedBox(
@@ -98,7 +101,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
           ),
         ),
         color: Theme.of(context).primaryColor,
-        onPressed: _submit,
+        onPressed: enableSubmitButton ? _submit : null,
       ),
       FlatButton(
         onPressed: _toogleFormType,
@@ -112,6 +115,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   TextField _buildPasswordTextField() {
     return TextField(
       onEditingComplete: _submit,
+      onChanged: (password) => _updateState(),
       focusNode: _passwordFocusNode,
       textInputAction: TextInputAction.done,
       autocorrect: false,
@@ -125,6 +129,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   TextField _buildEmailTextField() {
     return TextField(
+      onChanged: (email) => _updateState(),
       onEditingComplete: _emailEditingDone,
       focusNode: _emailFocusNode,
       textInputAction: TextInputAction.next,
@@ -147,5 +152,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         children: _buildChildren(context),
       ),
     );
+  }
+
+  void _updateState() {
+    setState(() {});
   }
 }
