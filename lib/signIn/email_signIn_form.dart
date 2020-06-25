@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
+import 'package:time_tracker_app_original/validators.dart';
 
 import '../PlatFormExceptionAlertDialog.dart';
 
 enum EmailSignInFormType { register, signIn }
 
-class EmailSignInForm extends StatefulWidget {
+class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
 }
@@ -28,11 +29,13 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   String get _email => _emailController.text.toString();
   String get _password => _passwordController.text.toString();
 
+  bool _submitted = false;
   bool _isLoading = false;
 
   //This is the method that's signs in with FireBase
   Future<void> _submit() async {
     setState(() {
+      _submitted = true;
       _isLoading = true;
     });
     try {
@@ -51,6 +54,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
           .show(context);
     } finally {
       setState(() {
+        _submitted = false;
         _isLoading = false;
       });
     }
@@ -62,6 +66,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       _formType = _formType == EmailSignInFormType.signIn
           ? EmailSignInFormType.register
           : EmailSignInFormType.signIn;
+
+      _submitted = false;
     });
     _emailController.clear();
     _passwordController.clear();
@@ -81,7 +87,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         ? "Don't have an Account? Register"
         : "Already have an account Sign In";
 
-    bool enableSubmitButton = _email.isNotEmpty && _password.isNotEmpty;
+    bool enableSubmitButton = widget.emailValidator.isValid(_email) &&
+        widget.emailValidator.isValid(_password) &&
+        !_isLoading;
 
     return [
       _buildEmailTextField(),
@@ -104,7 +112,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         onPressed: enableSubmitButton ? _submit : null,
       ),
       FlatButton(
-        onPressed: _toogleFormType,
+        onPressed: !_isLoading ? _toogleFormType : null,
         child: Text(
           flatButtonText,
         ),
@@ -113,6 +121,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   TextField _buildPasswordTextField() {
+    bool showErrorText =
+        _submitted && !widget.emailValidator.isValid(_password);
     return TextField(
       onEditingComplete: _submit,
       onChanged: (password) => _updateState(),
@@ -121,6 +131,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       autocorrect: false,
       controller: _passwordController,
       decoration: InputDecoration(
+        enabled: _isLoading == false,
+        errorText: showErrorText ? "Password can't be empty" : null,
         labelText: 'Password',
       ),
       obscureText: true,
@@ -128,6 +140,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   TextField _buildEmailTextField() {
+    bool emailValid =
+        _submitted && !widget.emailValidator.isValid(_email) && !_isLoading;
     return TextField(
       onChanged: (email) => _updateState(),
       onEditingComplete: _emailEditingDone,
@@ -136,6 +150,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       keyboardType: TextInputType.emailAddress,
       controller: _emailController,
       decoration: InputDecoration(
+        enabled: _isLoading == false,
+        errorText: emailValid ? "Email can't be empty" : null,
         labelText: 'Email',
         hintText: 'email@mail.com',
       ),
