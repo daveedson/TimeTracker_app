@@ -28,10 +28,25 @@ class EmailSignInFormBloc {
             _model.email, _model.password);
       }
     } catch (e) {
-      rethrow;
-    } finally {
       updateWith(isLoading: false, submitted: false);
+      rethrow;
     }
+  }
+
+  void updateEmail(String email) => updateWith(email: email);
+  void updatePassword(String password) => updateWith(password: password);
+
+  void ToogleFormType() {
+    final formType = _model.formType == EmailSignInFormType.signIn
+        ? EmailSignInFormType.register
+        : EmailSignInFormType.signIn;
+    updateWith(
+      email: '',
+      password: '',
+      formType: formType,
+      submitted: false,
+      isLoading: false,
+    );
   }
 
   //this method adds values to the stream..
