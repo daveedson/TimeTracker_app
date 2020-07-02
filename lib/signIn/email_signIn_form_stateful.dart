@@ -5,15 +5,16 @@ import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/validators.dart';
 
 import '../PlatFormExceptionAlertDialog.dart';
+import 'EmailSigninModel.dart';
 
-enum EmailSignInFormType { register, signIn }
-
-class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
+class EmailSignInFormStateful extends StatefulWidget
+    with EmailAndPasswordValidators {
   @override
-  _EmailSignInFormState createState() => _EmailSignInFormState();
+  _EmailSignInFormStatefulState createState() =>
+      _EmailSignInFormStatefulState();
 }
 
-class _EmailSignInFormState extends State<EmailSignInForm> {
+class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
   //these two instances control the text that' s entering the textField.
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -31,6 +32,15 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   bool _submitted = false;
   bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   //This is the method that's signs in with FireBase
   Future<void> _submit() async {

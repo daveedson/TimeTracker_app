@@ -157,7 +157,7 @@ class SignInPage extends StatelessWidget {
   }
 
   Widget _buildCircularIndicator(BuildContext context, bool isloading) {
-    if (isloading) {
+    if (isloading == true) {
       return Center(child: CircularProgressIndicator());
     } else {
       return Text(

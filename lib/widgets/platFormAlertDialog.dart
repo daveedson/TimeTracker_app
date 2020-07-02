@@ -17,6 +17,7 @@ class PlatFormAlertDialog extends PlatFormWidgets {
   final String defaultActionText;
   final String cancelActionText;
 
+  // this method displays grants us access to the show dialog widget .
   Future<bool> show(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
@@ -62,6 +63,7 @@ class PlatFormAlertDialog extends PlatFormWidgets {
   }
 }
 
+//this class holds the action button for the specific platform Dialog.
 class PlatFormAlertDialogActions extends PlatFormWidgets {
   PlatFormAlertDialogActions({this.child, this.onPressed});
 
