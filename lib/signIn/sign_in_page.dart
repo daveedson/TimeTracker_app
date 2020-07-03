@@ -6,10 +6,10 @@ import 'package:time_tracker_app_original/signIn/sign_in_Bloc.dart';
 import 'package:time_tracker_app_original/widgets/custom_raisedButton.dart';
 
 class SignInPage extends StatelessWidget {
-  SignInPage({@required this.bloc});
+  SignInPage({@required this.bloc, @required this.isLoading});
 
   final SignInBloc bloc;
-
+  final bool isLoading;
   // final AuthController authController;
   /*
   this method is created to use the provider<SignInBloc> package as the parent of signInPage
@@ -25,7 +25,10 @@ class SignInPage extends StatelessWidget {
           create: (_) =>
               SignInBloc(authController: authController, isLoading: isLoading),
           child: Consumer<SignInBloc>(
-            builder: (context, bloc, _) => SignInPage(bloc: bloc),
+            builder: (context, bloc, _) => SignInPage(
+              bloc: bloc,
+              isLoading: isLoading.value,
+            ),
           ),
         ),
       ),
@@ -77,7 +80,6 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = Provider.of<ValueNotifier<bool>>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -86,11 +88,11 @@ class SignInPage extends StatelessWidget {
         ),
         elevation: 10.0,
       ),
-      body: _buildContent(context, isLoading.value),
+      body: _buildContent(context),
     );
   }
 
-  Widget _buildContent(BuildContext context, bool isLoading) {
+  Widget _buildContent(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
