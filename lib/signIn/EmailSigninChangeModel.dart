@@ -1,23 +1,25 @@
 import 'package:flutter/foundation.dart';
+import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/validators.dart';
 
 import 'EmailSigninModel.dart';
 
-
-class EmailSignInModel with EmailAndPasswordValidators,ChangeNotifier {
+class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
   EmailSignInModel({
     this.email = '',
     this.password = '',
     this.formType = EmailSignInFormType.signIn,
     this.submitted = false,
     this.isLoading = false,
+    this.authController,
   });
 
-   String email;
-   String password;
-   EmailSignInFormType formType;
-   bool submitted;
-   bool isLoading;
+  final AuthController authController;
+  String email;
+  String password;
+  EmailSignInFormType formType;
+  bool submitted;
+  bool isLoading;
 
   String get primaryButton {
     return formType == EmailSignInFormType.signIn ? 'Sign In' : 'Register';
@@ -45,11 +47,36 @@ class EmailSignInModel with EmailAndPasswordValidators,ChangeNotifier {
     return emailValid ? "Email can not be empty" : null;
   }
 
-  /*
-  because the variables are immutable we have to create a method to
-  create a copy of those variables listed above via a method
-   */
+  //this method submits the form for login or registration.
+  Future<void> submit() async {
+    updateWith(isLoading: true, submitted: true);
+    try {
+      if (formType == EmailSignInFormType.signIn) {
+        await authController.signInWthEmailAndPassword(email, password);
+      } else if (formType == EmailSignInFormType.register) {
+        await authController.RegisterUserInWthEmailAndPassword(email, password);
+      }
+    } catch (e) {
+      updateWith(isLoading: false, submitted: false);
+      rethrow;
+    }
+  }
 
+  //this method toogles the form type between registration and login..
+  void ToogleFormType() {
+    final typeOfForm = formType == EmailSignInFormType.signIn
+        ? EmailSignInFormType.register
+        : EmailSignInFormType.signIn;
+    updateWith(
+      email: '',
+      password: '',
+      formType: typeOfForm,
+      submitted: false,
+      isLoading: false,
+    );
+  }
+
+  //this method creates a mutable copy of variables defined in the constructor
   void updateWith({
     String email,
     String password,
@@ -57,13 +84,11 @@ class EmailSignInModel with EmailAndPasswordValidators,ChangeNotifier {
     bool submitted,
     bool isLoading,
   }) {
-
-      this.email = email ?? this.email;
-      this.password = password ?? this.password;
-      this.formType = formType ?? this.formType;
-      this.isLoading = isLoading ?? this.isLoading;
-      this.submitted = submitted ?? this.submitted;
-      notifyListeners();
-
+    this.email = email ?? this.email;
+    this.password = password ?? this.password;
+    this.formType = formType ?? this.formType;
+    this.isLoading = isLoading ?? this.isLoading;
+    this.submitted = submitted ?? this.submitted;
+    notifyListeners();
   }
 }
