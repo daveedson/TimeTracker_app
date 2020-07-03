@@ -18,11 +18,16 @@ class SignInPage extends StatelessWidget {
    */
   static Widget create(BuildContext context) {
     final authController = Provider.of<AuthController>(context, listen: false);
-    return Provider<SignInBloc>(
-      create: (_) => SignInBloc(authController: authController),
-      dispose: (context, bloc) => bloc.dispose(),
-      child: Consumer<SignInBloc>(
-        builder: (context, bloc, _) => SignInPage(bloc: bloc),
+    return ChangeNotifierProvider<ValueNotifier<bool>>(
+      create: (_) => ValueNotifier<bool>(false),
+      child: Consumer<ValueNotifier<bool>>(
+        builder: (_, isLoading, __) => Provider<SignInBloc>(
+          create: (_) =>
+              SignInBloc(authController: authController, isLoading: isLoading),
+          child: Consumer<SignInBloc>(
+            builder: (context, bloc, _) => SignInPage(bloc: bloc),
+          ),
+        ),
       ),
     );
   }
@@ -72,7 +77,7 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
+    final isLoading = Provider.of<ValueNotifier<bool>>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -81,13 +86,7 @@ class SignInPage extends StatelessWidget {
         ),
         elevation: 10.0,
       ),
-      body: StreamBuilder<bool>(
-        stream: bloc.isloading,
-        initialData: false,
-        builder: (context, snapshot) {
-          return _buildContent(context, snapshot.data);
-        },
-      ),
+      body: _buildContent(context, isLoading.value),
     );
   }
 

@@ -5,33 +5,17 @@ import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/services/auth.dart';
 
 class SignInBloc {
-  SignInBloc({@required this.authController});
+  SignInBloc({@required this.authController, @required this.isLoading});
   final AuthController authController;
-
-  //create a new stream controller that controls the loading state of our SignInPage
-  final StreamController<bool> _isLoadingController =
-      new StreamController<bool>();
-
-  //create a new stream,this would be the input Stream for the stream builder that we would add to the signInPage
-  Stream get isloading => _isLoadingController.stream;
-
-  void dispose() {
-    _isLoadingController.close();
-  }
-
-  //this method adds values to a stream
-  void _setIsLoading(bool valuesStreams) {
-    _isLoadingController.add(valuesStreams);
-  }
+  final ValueNotifier<bool> isLoading;
 
   Future<User> _signIn(Future<User> Function() signInMethod) async {
     try {
-      _setIsLoading(true);
+      isLoading.value = true;
       return await signInMethod();
     } catch (e) {
+      isLoading.value = false;
       rethrow;
-    } finally {
-      _setIsLoading(false);
     }
   }
 
