@@ -4,8 +4,8 @@ import 'package:time_tracker_app_original/validators.dart';
 
 import 'EmailSigninModel.dart';
 
-class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
-  EmailSignInModel({
+class EmailSignInChangeModel with EmailAndPasswordValidators, ChangeNotifier {
+  EmailSignInChangeModel({
     this.email = '',
     this.password = '',
     this.formType = EmailSignInFormType.signIn,
@@ -61,6 +61,9 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
       rethrow;
     }
   }
+
+  void updateEmail(String email) => updateWith(email: email);
+  void updatePassword(String password) => updateWith(password: password);
 
   //this method toogles the form type between registration and login..
   void ToogleFormType() {
