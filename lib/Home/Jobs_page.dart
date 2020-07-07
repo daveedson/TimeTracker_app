@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:time_tracker_app_original/Home/Job.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
+import 'package:time_tracker_app_original/services/Database.dart';
 import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
 
 class JobsPage extends StatelessWidget {
@@ -31,6 +33,12 @@ class JobsPage extends StatelessWidget {
     }
   }
 
+  //this method adds data/records to the database..
+  Future<void> _createJob(BuildContext context) async {
+    final database = Provider.of<Database>(context, listen: false);
+    await database.createJob(Job(name: "Blogging", ratePerHour: 10));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +47,7 @@ class JobsPage extends StatelessWidget {
         actions: <Widget>[
           FlatButton(
             child: Text(
-              'SignOut',
+              'Sign Out',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 15.0,
@@ -48,6 +56,11 @@ class JobsPage extends StatelessWidget {
             onPressed: () => _conFirmSignOut(context),
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _createJob(context),
+        child: Icon(Icons.add),
+        backgroundColor: Colors.redAccent,
       ),
     );
   }
