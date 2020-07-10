@@ -60,7 +60,7 @@ class _EmailSignInFormChangeNotifierState
       Navigator.pop(context);
     } on PlatformException catch (e) {
       print(e.toString());
-      PlatExceptionFormAlertDialog(title: 'Sign In Failed', exception: e)
+      PlatFormExceptionAlertDialog(title: 'Sign In Failed', exception: e)
           .show(context);
     }
   }

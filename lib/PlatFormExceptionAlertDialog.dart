@@ -2,15 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
 
-class PlatExceptionFormAlertDialog extends PlatFormAlertDialog {
-  PlatExceptionFormAlertDialog(
+class PlatFormExceptionAlertDialog extends PlatFormAlertDialog {
+  PlatFormExceptionAlertDialog(
       {@required String title, @required PlatformException exception})
       : super(
             title: title,
             content: _message(exception),
             defaultActionText: 'Ok');
 
-  static _message(PlatformException exception) {
+  static String _message(PlatformException exception) {
+    print(exception);
+
+    if (exception.message == 'FIRFirestoreErrorDomain') {
+      if (exception.code == 'Error 7') {
+        return 'Missing Permissions';
+      }
+    }
     return _errors[exception.code] ??
         exception
             .message; //this syntax simply means i want to find a message that corresponds to code i'm passing in as the key but if this cant be found i would just use exception.messsage...

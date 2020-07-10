@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/Home/Job.dart';
+import 'package:time_tracker_app_original/PlatFormExceptionAlertDialog.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/services/Database.dart';
 import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
@@ -35,8 +37,15 @@ class JobsPage extends StatelessWidget {
 
   //this method adds data/records to the database..
   Future<void> _createJob(BuildContext context) async {
-    final database = Provider.of<Database>(context, listen: false);
-    await database.createJob(Job(name: "Blogging", ratePerHour: 10));
+    try {
+      final database = Provider.of<Database>(context, listen: false);
+      await database.createJob(Job(name: "Blogging", ratePerHour: 10));
+    } on PlatformException catch (e) {
+      PlatFormExceptionAlertDialog(
+        title: 'Operation failed',
+        exception: e,
+      ).show(context);
+    }
   }
 
   @override
@@ -62,6 +71,31 @@ class JobsPage extends StatelessWidget {
         child: Icon(Icons.add),
         backgroundColor: Colors.redAccent,
       ),
+      body: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    final database = Provider.of<Database>(context, listen: false);
+    return StreamBuilder<List<Job>>(
+      stream: database.readJobs(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final jobs = snapshot.data;
+          final children = jobs.map((job) => Text(job.name)).toList();
+          return ListView(
+            children: children,
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Some error occured'),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }
