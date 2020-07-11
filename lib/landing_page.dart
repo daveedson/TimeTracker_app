@@ -5,8 +5,9 @@ import 'package:time_tracker_app_original/services/Database.dart';
 import 'package:time_tracker_app_original/services/FireStoreDatabase.dart';
 import 'package:time_tracker_app_original/services/auth.dart';
 
-import 'file:///C:/Users/ADMIN/AndroidStudioProjects/time_tracker_app_original/lib/Home/Jobs_page.dart';
 import 'file:///C:/Users/ADMIN/AndroidStudioProjects/time_tracker_app_original/lib/signIn/sign_in_page.dart';
+
+import 'Home/jobs/Jobs_page.dart';
 
 /*
 this page holds the control flow for all the sign in and signOut....
