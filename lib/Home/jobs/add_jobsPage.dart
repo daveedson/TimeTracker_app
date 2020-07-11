@@ -17,8 +17,22 @@ class AddJobPage extends StatefulWidget {
 class _AddJobPageState extends State<AddJobPage> {
   final _formKey = GlobalKey<FormState>();
 
+  String _name;
+  int _ratePerHour;
+
+  bool _validateAndSaveForm() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
   void _submit() {
-    //TODO: Validater and save form
+    if (_validateAndSaveForm()) {
+      print('Form Saved, name:$_name, ratePerHour: $_ratePerHour');
+    }
     //TODO: Submit data to firestore dataBase
   }
 
@@ -73,9 +87,23 @@ class _AddJobPageState extends State<AddJobPage> {
   List<Widget> _buildChildren() {
     return [
       TextFormField(
+        onSaved: (value) => _name = value,
         decoration: InputDecoration(labelText: 'Job name'),
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'This field cannot be empty';
+          }
+          return null;
+        },
       ),
       TextFormField(
+          onSaved: (newValue) => _ratePerHour = int.tryParse(newValue) ?? 0,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'This field cannot be empty';
+            }
+            return null;
+          },
           decoration: InputDecoration(labelText: 'Rate per hour'),
           keyboardType: TextInputType.numberWithOptions(
             decimal: false,
