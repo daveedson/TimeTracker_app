@@ -7,6 +7,9 @@ class FireStoreDatabase implements Database {
   FireStoreDatabase({this.uid}) : assert(uid != null);
   final String uid;
 
+  // method to use current date and time as DocumentId..
+  String documentDateAndTime() => DateTime.now().toIso8601String();
+
   //this method writes data to the cloudfirestore Database..
   @override
   Future<void> createJob(Job job) async {
@@ -16,7 +19,7 @@ class FireStoreDatabase implements Database {
    2. retrieve a document Reference that would be an instance of firestore.instance.documents("Store path created");
    3. Write the job data into this reference path location..
     */
-    final path = ApiPath.job(uid, 'jobs_abc');
+    final path = ApiPath.job(uid, documentDateAndTime());
     final documentReference = Firestore.instance.document(path);
     await documentReference.setData(job.toMap());
     print('$path: ${job.toMap()}');

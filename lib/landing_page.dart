@@ -16,7 +16,7 @@ this page holds the control flow for all the sign in and signOut....
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authController = Provider.of<AuthController>(context, listen: false);
+    final authController = Provider.of<AuthController>(context, listen: false); 
 
     return StreamBuilder<User>(
       stream: authController.onAuthStatChanged,
