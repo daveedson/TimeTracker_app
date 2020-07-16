@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/Home/Job.dart';
+import 'package:time_tracker_app_original/PlatFormExceptionAlertDialog.dart';
 import 'package:time_tracker_app_original/services/Database.dart';
 
 class AddJobPage extends StatefulWidget {
@@ -29,6 +32,7 @@ class _AddJobPageState extends State<AddJobPage> {
 
   String _name;
   int _ratePerHour;
+  bool _isloading = false;
 
   //this method validates the form
   bool _validateAndSaveForm() {
@@ -42,11 +46,22 @@ class _AddJobPageState extends State<AddJobPage> {
 
   void _submit() async {
     if (_validateAndSaveForm()) {
-      final job = Job(name: _name, ratePerHour: _ratePerHour);
-      await widget.database.createJob(job);
-      Navigator.of(context).pop();
+      try {
+        setState(() {
+          _isloading = true;
+        });
+        final job = Job(name: _name, ratePerHour: _ratePerHour);
+        await widget.database.createJob(job);
+        Navigator.of(context).pop();
+        setState(() {
+          _isloading = false;
+        });
+      } on PlatformException catch (e) {
+        PlatFormExceptionAlertDialog(title: 'Operation Failed', exception: e)
+            .show(context);
+      }
+      //TODO: Submit data to firestore dataBase
     }
-    //TODO: Submit data to firestore dataBase
   }
 
   @override
@@ -69,7 +84,7 @@ class _AddJobPageState extends State<AddJobPage> {
         ],
       ),
       backgroundColor: Colors.grey[200],
-      body: _buildContents(),
+      body: ModalProgressHUD(inAsyncCall: _isloading, child: _buildContents()),
     );
   }
 
