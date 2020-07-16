@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/Home/Job.dart';
 import 'package:time_tracker_app_original/Home/jobs/add_jobsPage.dart';
+import 'package:time_tracker_app_original/Home/jobs/job_list_tile.dart';
 import 'package:time_tracker_app_original/services/AuthController.dart';
 import 'package:time_tracker_app_original/services/Database.dart';
 import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
@@ -81,8 +82,20 @@ class JobsPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final jobs = snapshot.data;
-          final children = jobs.map((job) => Text(job.name)).toList();
+          final children = jobs
+              .map(
+                (job) => Card(
+                  borderOnForeground: true,
+                  elevation: 3.0,
+                  child: JobListTile(
+                    job: job,
+                    onTap: () {},
+                  ),
+                ),
+              )
+              .toList();
           return ListView(
+            physics: BouncingScrollPhysics(),
             children: children,
           );
         }

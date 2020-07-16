@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/Home/Job.dart';
 import 'package:time_tracker_app_original/PlatFormExceptionAlertDialog.dart';
 import 'package:time_tracker_app_original/services/Database.dart';
+import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
 
 class AddJobPage extends StatefulWidget {
   final Database database;
@@ -44,18 +45,31 @@ class _AddJobPageState extends State<AddJobPage> {
     return false;
   }
 
+  //this method submits/writes data to cloud firestore
   void _submit() async {
     if (_validateAndSaveForm()) {
       try {
-        setState(() {
-          _isloading = true;
-        });
-        final job = Job(name: _name, ratePerHour: _ratePerHour);
-        await widget.database.createJob(job);
-        Navigator.of(context).pop();
-        setState(() {
-          _isloading = false;
-        });
+        //this block simple makes sure the user doesn't enter the object twice
+        final jobs = await widget.database.readJobs().first;
+        final allJobNames = jobs.map((job) => job.name).toList();
+
+        if (allJobNames.contains(_name)) {
+          PlatFormAlertDialog(
+            title: 'Name already used',
+            defaultActionText: 'Ok',
+            content: 'Please enter another job',
+          ).show(context);
+        } else {
+          setState(() {
+            _isloading = true;
+          });
+          final job = Job(name: _name, ratePerHour: _ratePerHour);
+          await widget.database.createJob(job);
+          setState(() {
+            _isloading = false;
+          });
+          Navigator.of(context).pop();
+        }
       } on PlatformException catch (e) {
         PlatFormExceptionAlertDialog(title: 'Operation Failed', exception: e)
             .show(context);
