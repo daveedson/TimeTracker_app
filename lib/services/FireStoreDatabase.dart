@@ -11,14 +11,14 @@ class FireStoreDatabase implements Database {
   final String uid;
 
   @override
-  Future<void> createJob(Job job) async => FireStoreService.setData(
-        path: ApiPath.job(uid, documentDateAndTime()),
+  Future<void> setJob(Job job) async => FireStoreService.setData(
+        path: ApiPath.job(uid, job.id),
         data: job.toMap(),
       );
 
   @override
   Stream<List<Job>> readJobs() => FireStoreService.collectionStream(
         path: ApiPath.jobs(uid),
-        builder: (data) => Job.fromMap(data),
+        builder: (data, documentId) => Job.fromMap(data, documentId),
       );
 }

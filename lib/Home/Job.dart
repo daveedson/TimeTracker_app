@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 class Job {
-  Job({@required this.name, @required this.ratePerHour});
+  Job({@required this.name, @required this.ratePerHour, this.id});
   final String name;
   final int ratePerHour;
+  final String id;
 
   //this factory constructor allows us to read data from firebase
-  factory Job.fromMap(Map<String, dynamic> data) {
+  factory Job.fromMap(Map<String, dynamic> data, String documentId) {
     if (data == null) {
       return null;
     }
@@ -15,6 +16,7 @@ class Job {
     return Job(
       name: name,
       ratePerHour: ratePerHour,
+      id: documentId,
     );
   }
 
