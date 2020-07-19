@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_app_original/Home/Job.dart';
-import 'package:time_tracker_app_original/PlatFormExceptionAlertDialog.dart';
 import 'package:time_tracker_app_original/services/Database.dart';
-import 'package:time_tracker_app_original/widgets/platFormAlertDialog.dart';
 
 class EditJobsPage extends StatefulWidget {
   final Database database;
@@ -60,37 +58,37 @@ class _EditJobsPageState extends State<EditJobsPage> {
 
   //this method submits/writes data to cloud firestore
   Future<void> _submit() async {
-    if (_validateAndSaveForm()) {
-      try {
-        //this gets the current list of jobs from fireStore
-        final jobs = await widget.database.readJobs().first;
-        final allJobNames = jobs.map((job) => job.name).toList();
-        if (widget.job != null) {
-          allJobNames.remove(widget.job.name);
-        }
-        if (allJobNames.contains(_name)) {
-          PlatFormAlertDialog(
-            title: 'Name already used',
-            defaultActionText: 'Ok',
-            content: 'Please enter another job',
-          ).show(context);
-        } else {
-          setState(() {
-            _isloading = true;
-          });
-          final job = Job(name: _name, ratePerHour: _ratePerHour);
-          await widget.database.setJob(job);
-          setState(() {
-            _isloading = false;
-          });
-          Navigator.of(context).pop();
-        }
-      } on PlatformException catch (e) {
-        PlatFormExceptionAlertDialog(title: 'Operation Failed', exception: e)
-            .show(context);
-      }
-      //TODO: Submit data to firestore dataBase
-    }
+//    if (_validateAndSaveForm()) {
+//      try {
+//        //this gets the current list of jobs from fireStore
+//        final jobs = await widget.database.readJobs().first;
+//        final allJobNames = jobs.map((job) => job.name).toList();
+//        if (widget.job != null) {
+//          allJobNames.remove(widget.job.name);
+//        }
+//        if (allJobNames.contains(_name)) {
+//          PlatFormAlertDialog(
+//            title: 'Name already used',
+//            defaultActionText: 'Ok',
+//            content: 'Please enter another job',
+//          ).show(context);
+//        } else {
+//          setState(() {
+//            _isloading = true;
+//          });
+//          final job = Job(name: _name, ratePerHour: _ratePerHour);
+//          await widget.database.setJob(job);
+//          setState(() {
+//            _isloading = false;
+//          });
+//          Navigator.of(context).pop();
+//        }
+//      } on PlatformException catch (e) {
+//        PlatFormExceptionAlertDialog(title: 'Operation Failed', exception: e)
+//            .show(context);
+//      }
+//      //TODO: Submit data to firestore dataBase
+//    }
   }
 
   @override

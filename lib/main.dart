@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
         title: 'Time Tracker',
         theme: ThemeData(
           primaryColor: Colors.red[400],
-          accentColor: Colors.redAccent,
         ),
         home: LandingPage(),
       ),
