@@ -15,6 +15,9 @@ class FireStoreDatabase implements Database {
         path: ApiPath.job(uid, job.id),
         data: job.toMap(),
       );
+  @override
+  Future<void> deleteJob(Job job) async =>
+      await FireStoreService.deleteData(path: ApiPath.job(uid, job.id));
 
   @override
   Stream<List<Job>> readJobs() => FireStoreService.collectionStream(

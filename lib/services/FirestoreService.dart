@@ -3,10 +3,18 @@ import 'package:flutter/foundation.dart';
 
 class FireStoreService {
   //helper method for writing to database...
-  static Future<void> setData({String path, Map<String, dynamic> data}) async {
+  static Future<void> setData(
+      {@required String path, @required Map<String, dynamic> data}) async {
     final reference = Firestore.instance.document(path);
     await reference.setData(data);
     print('$path:$data');
+  }
+
+  //this method delete jobs from Firebase..
+  static Future<void> deleteData({@required String path}) async {
+    final reference = Firestore.instance.document(path);
+    await reference.delete();
+    print("delete : $path");
   }
 
   //helper method for reading data to database..
